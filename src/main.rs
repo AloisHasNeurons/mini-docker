@@ -18,7 +18,7 @@ enum Commands {
     },
 }
 
-fn main() {
+fn main() -> std::io::Result<()>{
     let cli = Cli::parse();
 
     match cli.command {
@@ -31,10 +31,12 @@ fn main() {
             // For now, we just spawn a normal child process.
             let mut child = Command::new(command)
                 .args(args)
-                .spawn()
-                .expect("Failed to execute command");
+                .spawn()?;
 
-            child.wait().expect("Child process failed");
+            child.wait()?;
         }
     }
+    // In case there are no errors, we return the success value with Ok()
+    // Which is an empty tuple in our case : ()
+    return Ok(());
 }
